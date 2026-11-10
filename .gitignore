@@ -12,3 +12,6 @@ homebridge-fake-homekey.*.json
 persist/
 accessories/
 *.tmp
+
+# Note di lavoro per Claude Code
+CLAUDE.md
