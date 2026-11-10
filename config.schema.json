@@ -5,12 +5,12 @@
   "headerDisplay": "Fake lock with Apple Home Key. It has no NFC reader: it only makes the key appear in Wallet.",
   "schema": {
     "type": "object",
+    "required": ["name"],
     "properties": {
       "name": {
         "title": "Name",
         "type": "string",
-        "default": "Home Key Lock",
-        "required": true
+        "default": "Home Key Lock"
       },
       "finish": {
         "title": "Key color in Wallet",

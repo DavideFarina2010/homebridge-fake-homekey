@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3
+
+- Add `supports-hap` keyword.
+- Fix config schema: `required` is now an array at object level.
+
 ## 0.1.2
 
 - CI now tests Node 22, 24 and 26.
