@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- CI now tests Node 22, 24 and 26.
+
 ## 0.1.1
 
 - English README (Italian moved to `README.it.md`), English log messages and config schema.
