@@ -2,41 +2,41 @@
   "pluginAlias": "FakeHomeKey",
   "pluginType": "platform",
   "singular": true,
-  "headerDisplay": "Serratura finta con Apple Home Key. Non ha nessun lettore NFC: serve solo a far comparire la chiave nel Wallet.",
+  "headerDisplay": "Fake lock with Apple Home Key. It has no NFC reader: it only makes the key appear in Wallet.",
   "schema": {
     "type": "object",
     "properties": {
       "name": {
-        "title": "Nome",
+        "title": "Name",
         "type": "string",
         "default": "Home Key Lock",
         "required": true
       },
       "finish": {
-        "title": "Colore della chiave nel Wallet",
+        "title": "Key color in Wallet",
         "type": "string",
         "default": "tan",
         "oneOf": [
           { "title": "Tan (beige)", "enum": ["tan"] },
-          { "title": "Oro", "enum": ["gold"] },
-          { "title": "Argento", "enum": ["silver"] },
-          { "title": "Nero", "enum": ["black"] }
+          { "title": "Gold", "enum": ["gold"] },
+          { "title": "Silver", "enum": ["silver"] },
+          { "title": "Black", "enum": ["black"] }
         ]
       },
       "autoLockSeconds": {
-        "title": "Richiusura automatica (secondi, 0 = mai)",
+        "title": "Auto re-lock (seconds, 0 = never)",
         "type": "integer",
         "default": 5,
         "minimum": 0
       },
       "serialNumber": {
-        "title": "Numero di serie",
+        "title": "Serial number",
         "type": "string",
         "default": "FHK-0001"
       },
       "resetState": {
-        "title": "Cancella chiave del lettore e credenziali salvate",
-        "description": "Attivalo per un solo avvio quando devi rifare l'abbinamento da zero, poi disattivalo.",
+        "title": "Clear reader key and stored credentials",
+        "description": "Enable for a single restart when you need to pair from scratch, then disable it again.",
         "type": "boolean",
         "default": false
       }

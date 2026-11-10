@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- English README (Italian moved to `README.it.md`), English log messages and config schema.
+- Corrupted state file no longer blocks startup.
+- Firmware revision follows the package version.
+
 ## 0.1.0
 
 - Prima versione: serratura simulata con servizio NFC Access, provisioning della Home Key nel Wallet tramite l'app Casa.

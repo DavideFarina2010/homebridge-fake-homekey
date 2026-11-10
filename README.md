@@ -1,38 +1,43 @@
 # homebridge-fake-homekey
 
-Serratura finta per Homebridge che espone il servizio HomeKit **NFC Access**, così l'app Casa può aggiungere una **Home Key** al Wallet senza nessuna serratura né lettore NFC.
+[![npm](https://img.shields.io/npm/v/homebridge-fake-homekey)](https://www.npmjs.com/package/homebridge-fake-homekey)
+[![license](https://img.shields.io/npm/l/homebridge-fake-homekey)](LICENSE)
 
-## Cosa fa (e cosa no)
+Italiano: [README.it.md](README.it.md)
 
-- Pubblica una serratura (Lock Mechanism + Lock Management + NFC Access) come accessorio esterno, cioè con un abbinamento HomeKit suo, separato dal bridge.
-- Risponde ai comandi TLV8 che l'iPhone scrive su "NFC Access Control Point": riceve la chiave del lettore e le credenziali dei dispositivi, le salva e risponde come una serratura vera.
-- **Non c'è la parte NFC.** Avvicinare l'iPhone a qualcosa non farà niente: la chiave compare nel Wallet e basta. Per un lettore vero serve un progetto come HomeKey-ESP32.
-- La serratura non pilota hardware. Aprire o chiudere dall'app Casa cambia solo lo stato simulato (con richiusura automatica opzionale).
+A fake lock for Homebridge that exposes the HomeKit **NFC Access** service, so the Home app can add an **Apple Home Key** to Wallet with no lock and no NFC reader.
 
-## Stato di verifica
+## What it does (and what it doesn't)
 
-- **Testato e funzionante**: la Home Key viene aggiunta al Wallet dell'iPhone tramite l'app Casa.
-- Coperti dai test automatici: logica TLV, valori di esempio della documentazione di kupa22, round-trip su HAP-NodeJS 2.3 (write-response), avvio dentro Homebridge 2.5.
-- Il protocollo è ricostruito da reverse engineering e alcuni dettagli non sono documentati (formato della rimozione di una credenziale, significato di "Configuration State", operazione "get" delle credenziali). Se l'app Casa non propone la Home Key, guarda il log di Homebridge con `-D`: ogni richiesta NFC Access viene registrata.
+- Publishes a lock (Lock Mechanism + Lock Management + NFC Access) as an external accessory, i.e. with its own HomeKit pairing, separate from the bridge.
+- Answers the TLV8 commands the iPhone writes to the "NFC Access Control Point": it receives the reader key and the device credentials, stores them and replies like a real lock.
+- **There is no NFC part.** Holding the iPhone near something does nothing: the key shows up in Wallet and that's it. For a real reader you need a project such as HomeKey-ESP32.
+- The lock does not drive any hardware. Locking or unlocking from the Home app only changes a simulated state (with optional automatic re-lock).
 
-## Installazione
+## Verification status
 
-Serve Homebridge 1.8+ o 2.x (Node 20.15+).
+- **Tested and working**: the Home Key is added to the iPhone's Wallet through the Home app.
+- Covered by automated tests: TLV logic, example values from kupa22's documentation, HAP-NodeJS 2.3 round-trip (write-response), startup inside Homebridge 2.5.
+- The protocol is reverse-engineered and some details are undocumented (format of credential removal, meaning of "Configuration State", the credential "get" operation). If the Home app doesn't offer the Home Key, run Homebridge with `-D`: every NFC Access request is logged.
+
+## Installation
+
+Requires Homebridge 1.8+ or 2.x (Node 20.15+).
 
 ```bash
 npm install -g homebridge-fake-homekey
 ```
 
-Oppure dall'interfaccia di Homebridge, cercando "Fake Home Key". Per installare da sorgente: `git clone https://github.com/DavideFarina2010/homebridge-fake-homekey` e `npm install -g ./homebridge-fake-homekey`.
+Or search for "Fake Home Key" in the Homebridge UI. To install from source: `git clone https://github.com/DavideFarina2010/homebridge-fake-homekey` then `npm install -g ./homebridge-fake-homekey`.
 
-Poi aggiungi alla config di Homebridge (o usa l'interfaccia web, il plugin ha uno schema):
+Then add to your Homebridge config (or use the web UI, the plugin ships a schema):
 
 ```json
 {
   "platforms": [
     {
       "platform": "FakeHomeKey",
-      "name": "Porta Finta",
+      "name": "Fake Door",
       "finish": "tan",
       "autoLockSeconds": 5
     }
@@ -40,42 +45,42 @@ Poi aggiungi alla config di Homebridge (o usa l'interfaccia web, il plugin ha un
 }
 ```
 
-| Opzione | Significato |
+| Option | Meaning |
 | --- | --- |
-| `name` | Nome dell'accessorio in Casa |
-| `finish` | Colore della chiave nel Wallet: `tan`, `gold`, `silver`, `black` |
-| `autoLockSeconds` | Richiusura automatica simulata, `0` = mai |
-| `serialNumber` | Numero di serie mostrato in Casa |
-| `resetState` | Cancella chiave del lettore e credenziali salvate (da usare per un solo avvio) |
+| `name` | Accessory name in the Home app |
+| `finish` | Key color in Wallet: `tan`, `gold`, `silver`, `black` |
+| `autoLockSeconds` | Simulated automatic re-lock, `0` = never |
+| `serialNumber` | Serial number shown in the Home app |
+| `resetState` | Clears the reader key and stored credentials (use for a single restart) |
 
-## Abbinamento
+## Pairing
 
-1. Riavvia Homebridge. Nel log compare "Accessorio ... pubblicato" con il codice QR.
-2. Nell'app Casa: Aggiungi accessorio, inquadra il QR (il PIN è quello del bridge Homebridge).
-3. Dalle impostazioni della serratura nell'app Casa dovrebbe comparire l'opzione per aggiungere la chiave al Wallet.
+1. Restart Homebridge. The log shows "Accessory ... published" with the QR code.
+2. In the Home app: Add Accessory, scan the QR code (the PIN is the Homebridge bridge PIN).
+3. In the lock's settings in the Home app, the option to add the key to Wallet should appear.
 
-Requisiti lato Apple: iPhone XS o successivo, hub Casa (HomePod o Apple TV) configurato, iOS aggiornato.
+Apple requirements: iPhone XS or later, a configured home hub (HomePod or Apple TV), up-to-date iOS.
 
-## Rifare tutto da capo
+## Starting over
 
-1. Rimuovi la serratura dall'app Casa e la chiave dal Wallet.
-2. Metti `"resetState": true`, riavvia Homebridge, poi rimetti `false`.
+1. Remove the lock from the Home app and the key from Wallet.
+2. Set `"resetState": true`, restart Homebridge, then set it back to `false`.
 
-## Sicurezza
+## Security
 
-Lo stato è in `<cartella persist di Homebridge>/homebridge-fake-homekey.*.json` (permessi 0600) e contiene la chiave privata del lettore. Non condividerlo e non incollarlo nei log pubblici. Il plugin non scrive mai le chiavi nei log.
+State is stored in `<Homebridge persist folder>/homebridge-fake-homekey.*.json` (permissions 0600) and contains the reader's private key. Don't share it or paste it in public logs. The plugin never writes keys to the logs.
 
-## Test
+## Tests
 
 ```bash
 npm install
 npm test
 ```
 
-## Crediti
+## Credits
 
-Il protocollo è documentato dal lavoro di [@kupa22](https://github.com/kupa22/apple-homekey) e [@kormax](https://github.com/kormax/apple-home-key). Progetto non affiliato né approvato da Apple. "Home Key" e "Wallet" sono marchi di Apple Inc.
+The protocol is documented by the work of [@kupa22](https://github.com/kupa22/apple-homekey) and [@kormax](https://github.com/kormax/apple-home-key). Not affiliated with or endorsed by Apple. "Home Key" and "Wallet" are trademarks of Apple Inc.
 
-## Licenza
+## License
 
 [MIT](LICENSE)

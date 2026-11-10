@@ -37,7 +37,7 @@ class FakeHomeKeyPlatform {
     const store = new StateStore(this.api.user.persistPath(), uuid.generate(name).slice(0, 8), this.log);
     if (this.config.resetState) {
       store.reset();
-      this.log.warn('resetState attivo: stato Home Key cancellato. Ricorda di rimuovere questa opzione dopo il primo avvio.');
+      this.log.warn('resetState is on: Home Key state cleared. Remember to turn this option off after the first restart.');
     }
     const state = store.load();
     const controller = new NfcAccessController({
@@ -75,12 +75,12 @@ class FakeHomeKeyPlatform {
           ? Characteristic.LockCurrentState.SECURED
           : Characteristic.LockCurrentState.UNSECURED;
       lock.getCharacteristic(Characteristic.LockCurrentState).updateValue(current);
-      this.log.info(`Serratura simulata: ${current === Characteristic.LockCurrentState.SECURED ? 'chiusa' : 'aperta'}`);
+      this.log.info(`Simulated lock: ${current === Characteristic.LockCurrentState.SECURED ? 'locked' : 'unlocked'}`);
       if (current === Characteristic.LockCurrentState.UNSECURED && autoLockSeconds > 0) {
         relockTimer = setTimeout(() => {
           lock.getCharacteristic(Characteristic.LockTargetState).updateValue(Characteristic.LockTargetState.SECURED);
           lock.getCharacteristic(Characteristic.LockCurrentState).updateValue(Characteristic.LockCurrentState.SECURED);
-          this.log.info('Serratura simulata: richiusa automaticamente');
+          this.log.info('Simulated lock: automatically re-locked');
         }, autoLockSeconds * 1000);
       }
     });
@@ -100,19 +100,19 @@ class FakeHomeKeyPlatform {
       try {
         return controller.handleControlPoint(value);
       } catch (error) {
-        this.log.error(`Errore nella gestione di NFC Access: ${error.message}`);
+        this.log.error(`NFC Access error: ${error.message}`);
         throw new this.api.hap.HapStatusError(this.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
       }
     });
 
     this.api.publishExternalAccessories(PLUGIN_NAME, [accessory]);
     this.log.info(
-      `Accessorio "${name}" pubblicato. Aggiungilo nell'app Casa con il PIN del bridge Homebridge ` +
-        '(compare nel log e nell\'interfaccia di Homebridge).',
+      `Accessory "${name}" published. Add it in the Home app with the Homebridge bridge PIN ` +
+        '(shown in the log and in the Homebridge UI).',
     );
     if (state.reader) {
       this.log.info(
-        `Reader key gia' presente (${state.reader.identifier}), ${state.endpoints.length} credenziale/i salvata/e.`,
+        `Reader key already present (${state.reader.identifier}), ${state.endpoints.length} stored credential(s).`,
       );
     }
   }
