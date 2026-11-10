@@ -1,0 +1,42 @@
+{
+  "name": "homebridge-fake-homekey",
+  "displayName": "Fake Home Key Lock",
+  "version": "0.1.0",
+  "description": "Serratura simulata per Homebridge che espone il servizio NFC Access, cosi' l'app Casa puo' aggiungere una Home Key al Wallet senza hardware NFC.",
+  "license": "MIT",
+  "author": "Davide Farina",
+  "homepage": "https://github.com/DavideFarina2010/homebridge-fake-homekey#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavideFarina2010/homebridge-fake-homekey.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DavideFarina2010/homebridge-fake-homekey/issues"
+  },
+  "main": "index.js",
+  "keywords": [
+    "homebridge-plugin",
+    "homekit",
+    "home-key",
+    "nfc"
+  ],
+  "engines": {
+    "node": ">=20.15.0",
+    "homebridge": "^1.8.0 || ^2.0.0-beta.0 || ^2.0.0"
+  },
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "files": [
+    "index.js",
+    "lib",
+    "config.schema.json",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "devDependencies": {
+    "@homebridge/hap-nodejs": "^2.3.0",
+    "homebridge": "^2.5.0"
+  }
+}

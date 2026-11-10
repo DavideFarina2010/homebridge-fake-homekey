@@ -1,0 +1,14 @@
+node_modules/
+package-lock.json
+npm-debug.log*
+*.tgz
+.DS_Store
+.env
+.vscode/
+.idea/
+
+# Stato Home Key di sviluppo: contiene la chiave privata del lettore
+homebridge-fake-homekey.*.json
+persist/
+accessories/
+*.tmp

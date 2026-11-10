@@ -11,16 +11,19 @@ Serratura finta per Homebridge che espone il servizio HomeKit **NFC Access**, co
 
 ## Stato di verifica
 
-- Testato: logica TLV, valori di esempio della documentazione di kupa22, round-trip su HAP-NodeJS 2.3 (write-response), avvio dentro Homebridge 2.5.
-- **Non testato con un iPhone reale.** Il protocollo è ricostruito da reverse engineering e alcuni dettagli non sono documentati (formato della rimozione di una credenziale, significato di "Configuration State", operazione "get" delle credenziali). Se l'app Casa non propone la Home Key, guarda il log di Homebridge con `-D`: ogni richiesta NFC Access viene registrata.
+- **Testato e funzionante**: la Home Key viene aggiunta al Wallet dell'iPhone tramite l'app Casa.
+- Coperti dai test automatici: logica TLV, valori di esempio della documentazione di kupa22, round-trip su HAP-NodeJS 2.3 (write-response), avvio dentro Homebridge 2.5.
+- Il protocollo è ricostruito da reverse engineering e alcuni dettagli non sono documentati (formato della rimozione di una credenziale, significato di "Configuration State", operazione "get" delle credenziali). Se l'app Casa non propone la Home Key, guarda il log di Homebridge con `-D`: ogni richiesta NFC Access viene registrata.
 
 ## Installazione
 
 Serve Homebridge 1.8+ o 2.x (Node 20.15+).
 
 ```bash
-npm install -g /percorso/di/homebridge-fake-homekey
+npm install -g homebridge-fake-homekey
 ```
+
+Oppure dall'interfaccia di Homebridge, cercando "Fake Home Key". Per installare da sorgente: `git clone https://github.com/DavideFarina2010/homebridge-fake-homekey` e `npm install -g ./homebridge-fake-homekey`.
 
 Poi aggiungi alla config di Homebridge (o usa l'interfaccia web, il plugin ha uno schema):
 
@@ -71,5 +74,8 @@ npm test
 
 ## Crediti
 
-Il protocollo è documentato dal lavoro di [@kupa22](https://github.com/kupa22/apple-homekey) e [@kormax](https://github.com/kormax/apple-home-key). Progetto non affiliato né approvato da Apple.
-# homebridge-fake-homekey
+Il protocollo è documentato dal lavoro di [@kupa22](https://github.com/kupa22/apple-homekey) e [@kormax](https://github.com/kormax/apple-home-key). Progetto non affiliato né approvato da Apple. "Home Key" e "Wallet" sono marchi di Apple Inc.
+
+## Licenza
+
+[MIT](LICENSE)

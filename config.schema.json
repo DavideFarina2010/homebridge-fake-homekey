@@ -1,0 +1,45 @@
+{
+  "pluginAlias": "FakeHomeKey",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Serratura finta con Apple Home Key. Non ha nessun lettore NFC: serve solo a far comparire la chiave nel Wallet.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Nome",
+        "type": "string",
+        "default": "Home Key Lock",
+        "required": true
+      },
+      "finish": {
+        "title": "Colore della chiave nel Wallet",
+        "type": "string",
+        "default": "tan",
+        "oneOf": [
+          { "title": "Tan (beige)", "enum": ["tan"] },
+          { "title": "Oro", "enum": ["gold"] },
+          { "title": "Argento", "enum": ["silver"] },
+          { "title": "Nero", "enum": ["black"] }
+        ]
+      },
+      "autoLockSeconds": {
+        "title": "Richiusura automatica (secondi, 0 = mai)",
+        "type": "integer",
+        "default": 5,
+        "minimum": 0
+      },
+      "serialNumber": {
+        "title": "Numero di serie",
+        "type": "string",
+        "default": "FHK-0001"
+      },
+      "resetState": {
+        "title": "Cancella chiave del lettore e credenziali salvate",
+        "description": "Attivalo per un solo avvio quando devi rifare l'abbinamento da zero, poi disattivalo.",
+        "type": "boolean",
+        "default": false
+      }
+    }
+  }
+}
