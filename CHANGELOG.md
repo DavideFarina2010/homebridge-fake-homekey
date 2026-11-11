@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.4
 
 - Delete leftover state files (with the reader key) when the accessory is renamed.
 - Cap `autoLockSeconds` at 86400 to avoid Node's 32-bit timer overflow.
