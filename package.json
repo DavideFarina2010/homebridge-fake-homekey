@@ -1,7 +1,7 @@
 {
   "name": "homebridge-fake-homekey",
   "displayName": "Fake Home Key Lock",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Homebridge plugin: a simulated lock exposing HomeKit NFC Access, so the Home app can add an Apple Home Key to Wallet without NFC hardware.",
   "license": "MIT",
   "author": "Davide Farina",
