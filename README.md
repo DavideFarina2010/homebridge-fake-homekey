@@ -2,6 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/homebridge-fake-homekey)](https://www.npmjs.com/package/homebridge-fake-homekey)
 [![license](https://img.shields.io/npm/l/homebridge-fake-homekey)](LICENSE)
+[![verified-by-homebridge](https://img.shields.io/badge/homebridge-verified-blueviolet?color=%23491F59&style=flat)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 
 Italiano: [README.it.md](README.it.md)
 

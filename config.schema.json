@@ -24,10 +24,11 @@
         ]
       },
       "autoLockSeconds": {
-        "title": "Auto re-lock (seconds, 0 = never)",
+        "title": "Auto re-lock (seconds, 0 = never, max 86400)",
         "type": "integer",
         "default": 5,
-        "minimum": 0
+        "minimum": 0,
+        "maximum": 86400
       },
       "serialNumber": {
         "title": "Serial number",

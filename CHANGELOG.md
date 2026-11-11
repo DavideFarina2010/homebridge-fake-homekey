@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Delete leftover state files (with the reader key) when the accessory is renamed.
+- Cap `autoLockSeconds` at 86400 to avoid Node's 32-bit timer overflow.
+- Translate the last Italian error message.
+- Add the Verified by Homebridge badge.
+
 ## 0.1.3
 
 - Add `supports-hap` keyword.

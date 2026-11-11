@@ -31,7 +31,10 @@ class FakeHomeKeyPlatform {
   publish() {
     const { Service, Characteristic, Categories, uuid } = this.api.hap;
     const name = this.config.name || 'Home Key Lock';
-    const autoLockSeconds = Number.isFinite(this.config.autoLockSeconds) ? this.config.autoLockSeconds : 5;
+    // Capped at 24h: setTimeout overflows its 32-bit limit (~24.8 days) and would fire immediately.
+    const autoLockSeconds = Number.isFinite(this.config.autoLockSeconds)
+      ? Math.min(Math.max(this.config.autoLockSeconds, 0), 86400)
+      : 5;
 
     // --- stato persistente (chiave del lettore e credenziali dei dispositivi) ---
     const store = new StateStore(this.api.user.persistPath(), uuid.generate(name).slice(0, 8), this.log);
@@ -39,6 +42,7 @@ class FakeHomeKeyPlatform {
       store.reset();
       this.log.warn('resetState is on: Home Key state cleared. Remember to turn this option off after the first restart.');
     }
+    store.removeStale();
     const state = store.load();
     const controller = new NfcAccessController({
       state,

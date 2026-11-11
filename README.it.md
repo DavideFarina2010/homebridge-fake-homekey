@@ -1,5 +1,7 @@
 # homebridge-fake-homekey
 
+[![verified-by-homebridge](https://img.shields.io/badge/homebridge-verified-blueviolet?color=%23491F59&style=flat)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
+
 English: [README.md](README.md)
 
 Serratura finta per Homebridge che espone il servizio HomeKit **NFC Access**, così l'app Casa può aggiungere una **Home Key** al Wallet senza nessuna serratura né lettore NFC.
