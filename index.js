@@ -6,6 +6,7 @@ const {
   supportedConfigurationValue,
 } = require('./lib/protocol');
 const { StateStore } = require('./lib/store');
+const { AccessCodeController } = require('./lib/accessCodes');
 
 const { version: PLUGIN_VERSION } = require('./package.json');
 
@@ -108,6 +109,34 @@ class FakeHomeKeyPlatform {
         throw new this.api.hap.HapStatusError(this.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
       }
     });
+
+    // Personal PIN codes (Access Code service). Opt-in: the Control Point protocol is reverse engineered.
+    if (this.config.accessCodes) {
+      if (Service.AccessCode) {
+        const codes = accessory.addService(Service.AccessCode);
+        codes.getCharacteristic(Characteristic.ConfigurationState).updateValue(0);
+        // Digits only, 4-8 long, up to 100 codes.
+        codes
+          .getCharacteristic(Characteristic.AccessCodeSupportedConfiguration)
+          .updateValue(Buffer.from('01010102010403010804026400', 'hex').toString('base64'));
+        const accessCodes = new AccessCodeController({
+          log: this.log,
+          codes: state.accessCodes,
+          onChange: () => store.save(state),
+        });
+        codes.getCharacteristic(Characteristic.AccessCodeControlPoint).onSet((value) => {
+          try {
+            return accessCodes.handleControlPoint(value);
+          } catch (error) {
+            this.log.error(`Access Code error: ${error.message}`);
+            throw new this.api.hap.HapStatusError(this.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+          }
+        });
+        this.log.info(`Access codes enabled, ${state.accessCodes.length} stored.`);
+      } else {
+        this.log.warn('accessCodes is on, but this HAP-NodeJS has no Access Code service.');
+      }
+    }
 
     this.api.publishExternalAccessories(PLUGIN_NAME, [accessory]);
     this.log.info(

@@ -35,6 +35,12 @@
         "type": "string",
         "default": "FHK-0001"
       },
+      "accessCodes": {
+        "title": "Personal PIN codes",
+        "description": "Lets the Home app store personal PIN codes (4-8 digits) for the lock. The codes are saved in the plugin state file and don't unlock anything, since there is no keypad.",
+        "type": "boolean",
+        "default": false
+      },
       "resetState": {
         "title": "Clear reader key and stored credentials",
         "description": "Enable for a single restart when you need to pair from scratch, then disable it again.",

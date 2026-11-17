@@ -155,6 +155,68 @@ function makeController(maxEndpoints) {
     assert.equal(empty, '');
   });
 
+  await test('access code: list, add, read, update, remove, errori', () => {
+    const { AccessCodeController } = require('../lib/accessCodes');
+    const ctl = new AccessCodeController();
+    const call = (h) => hex(ctl.handleControlPoint(b64(h)));
+    const pin = '3132333435363738'; // "12345678"
+    const frag = (id, status, withPin = true) =>
+      `01${id}` + (withPin ? `0208${pin}` : '') + '030100' + `0401${status}`;
+
+    // lista vuota: solo l'eco dell'operazione
+    assert.equal(call('010101'), '010101');
+    // add con i byte reali catturati da iOS 18
+    assert.equal(call('010103020a0208' + pin), '010103' + '0313' + frag('0101', '00'));
+    assert.deepEqual(ctl.codes, [{ id: 1, code: '12345678' }]);
+    // lista con un codice
+    assert.equal(call('010101'), '010101' + '0313' + frag('0101', '00'));
+    // duplicato -> status 4, identificatore 0
+    assert.equal(call('010103020a0208' + pin), '010103' + '0313' + frag('0100', '04'));
+    // PIN troppo corto / non numerico
+    assert.equal(call('010103' + '0205' + '0203' + '313233').slice(-2), '05');
+    assert.equal(call('010103' + '0206' + '0204' + '61626364').slice(-2), '07');
+    // read esistente e inesistente
+    assert.equal(call('010102' + '0203' + '010101'), '010102' + '0313' + frag('0101', '00'));
+    assert.equal(call('010102' + '0203' + '010109'), '010102' + '0309' + '010109' + '030100' + '040109');
+    // update
+    assert.equal(call('010104' + '020d' + '010101' + '0208' + '3132333435363739').slice(-2), '00');
+    assert.equal(ctl.codes[0].code, '12345679');
+    // remove: esistente, poi inesistente
+    assert.equal(call('010105' + '0203' + '010101').slice(-2), '00');
+    assert.equal(ctl.codes.length, 0);
+    assert.equal(call('010105' + '0203' + '010101').slice(-2), '09');
+    // piu' frammenti separati da 00 00
+    call('010103020a0208' + pin);
+    call('010103020a0208' + '3030303030303030'.replace(/30/g, '31'));
+    assert.match(call('010101'), /0000/);
+    // operazione sconosciuta o richiesta vuota -> risposta vuota
+    assert.equal(call('010163'), '');
+    assert.equal(call(''), '');
+  });
+
+  await test('access code: i PIN sopravvivono al riavvio (stato 0600)', () => {
+    const fs = require('node:fs');
+    const os = require('node:os');
+    const path = require('node:path');
+    const { StateStore } = require('../lib/store');
+    const { AccessCodeController } = require('../lib/accessCodes');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fhk-'));
+    const store = new StateStore(dir, 'test');
+    const state = store.load();
+    assert.deepEqual(state.accessCodes, []);
+    const ctl = new AccessCodeController({ codes: state.accessCodes, onChange: () => store.save(state) });
+    ctl.handleControlPoint(b64('010103020a02083132333435363738'));
+    assert.equal(fs.statSync(store.file).mode & 0o777, 0o600);
+    const reloaded = new StateStore(dir, 'test').load();
+    assert.deepEqual(reloaded.accessCodes, [{ id: 1, code: '12345678' }]);
+    // il nuovo controller continua la numerazione e rifiuta i duplicati
+    const ctl2 = new AccessCodeController({ codes: reloaded.accessCodes });
+    assert.equal(hex(ctl2.handleControlPoint(b64('010103020a02083132333435363738'))).slice(-2), '04');
+    ctl2.handleControlPoint(b64('010103020a02083030303030303030'.replace(/3030/g, '3131')));
+    assert.equal(ctl2.codes[1].id, 2);
+    fs.rmSync(dir, { recursive: true, force: true });
+  });
+
   console.log(`\n${passed} test superati`);
 })().catch((error) => {
   console.error(error);

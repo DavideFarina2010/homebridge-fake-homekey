@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0
+
+- Add personal PIN codes (HomeKit Access Code service, iOS 18+), opt-in with the new `accessCodes` option. The Home app can add, read, update and remove 4-8 digit codes; they are stored in the plugin state file (0600) and are never logged. They unlock nothing (no keypad).
+- `resetState` now also clears the stored PIN codes.
+- Credit to HomeKey-ESP32 for the Access Code wire format.
+
 ## 0.1.4
 
 - Delete leftover state files (with the reader key) when the accessory is renamed.

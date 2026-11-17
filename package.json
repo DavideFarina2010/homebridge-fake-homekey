@@ -19,7 +19,9 @@
     "supports-hap",
     "homekit",
     "home-key",
-    "nfc"
+    "nfc",
+    "access-code",
+    "pin"
   ],
   "engines": {
     "node": ">=20.15.0",
