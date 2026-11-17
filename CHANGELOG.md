@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- Docs: adding, editing and removing PIN codes are verified on a real iPhone.
+
 ## 0.2.0
 
 - Add personal PIN codes (HomeKit Access Code service, iOS 18+), opt-in with the new `accessCodes` option. The Home app can add, read, update and remove 4-8 digit codes; they are stored in the plugin state file (0600) and are never logged. They unlock nothing (no keypad).

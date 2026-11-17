@@ -17,7 +17,7 @@ Serratura finta per Homebridge che espone il servizio HomeKit **NFC Access**, co
 ## Stato di verifica
 
 - **Testato e funzionante**: la Home Key viene aggiunta al Wallet dell'iPhone tramite l'app Casa.
-- **Codici PIN personali** (iOS 18+): l'aggiunta di un PIN dall'app Casa viene accettata e l'app lo rilegge. Rimozione e modifica sono implementate dallo stesso protocollo ma non ancora verificate su un iPhone vero.
+- **Codici PIN personali** (iOS 18+): aggiunta, rilettura, modifica e rimozione di un PIN dall'app Casa funzionano su un iPhone vero.
 - Coperti dai test automatici: logica TLV, valori di esempio della documentazione di kupa22, round-trip su HAP-NodeJS 2.3 (write-response), avvio dentro Homebridge 2.5.
 - Il protocollo è ricostruito da reverse engineering e alcuni dettagli non sono documentati (formato della rimozione di una credenziale, significato di "Configuration State", operazione "get" delle credenziali). Se l'app Casa non propone la Home Key, guarda il log di Homebridge con `-D`: ogni richiesta NFC Access viene registrata.
 

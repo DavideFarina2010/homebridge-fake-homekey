@@ -19,7 +19,7 @@ A fake lock for Homebridge that exposes the HomeKit **NFC Access** service, so t
 ## Verification status
 
 - **Tested and working**: the Home Key is added to the iPhone's Wallet through the Home app.
-- **Personal PIN codes** (iOS 18+): adding a PIN from the Home app is accepted, and the Home app reads it back. Removing and updating are implemented from the same protocol but not yet checked on a real iPhone.
+- **Personal PIN codes** (iOS 18+): adding, reading back, editing and removing a PIN from the Home app all work on a real iPhone.
 - Covered by automated tests: TLV logic, example values from kupa22's documentation, HAP-NodeJS 2.3 round-trip (write-response), startup inside Homebridge 2.5.
 - The protocol is reverse-engineered and some details are undocumented (format of credential removal, meaning of "Configuration State", the credential "get" operation). If the Home app doesn't offer the Home Key, run Homebridge with `-D`: every NFC Access request is logged.
 
